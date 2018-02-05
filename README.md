@@ -6,7 +6,7 @@ We're using python 3+ with django v2.
 Ensure that the python and pip versions you use are configured 
 for python 3+.
 
-###Configure VirtualEnv
+### Configure VirtualEnv
 VirtualEnv ensures that you will have an isolated environment for this project
 
 To create a new virtualenv
