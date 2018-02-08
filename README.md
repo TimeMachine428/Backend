@@ -44,3 +44,9 @@ cd timemachine/
 python manage.py test
 ```
 
+# Style Checking & Linting
+
+```
+./test.sh
+```
+

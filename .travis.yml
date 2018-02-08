@@ -8,5 +8,5 @@ install:
 
 # Run tests
 script:
-    - python timemachine/manage.py test
+    - ./test.sh
 
