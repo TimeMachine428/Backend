@@ -2,6 +2,7 @@ from django.db import models
 
 import datetime
 from django.utils import timezone
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 
@@ -24,7 +25,8 @@ class Rating(models.Model):
 
 
 	def __str__(self):
-		 """String representation of a user rating of a problem."""
+		"""String representation of a user rating of a problem."""
 		return self.title
+
 	def is_a_good_rating(self):
 		return self.rating >= 4
