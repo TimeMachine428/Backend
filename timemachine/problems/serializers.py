@@ -24,8 +24,8 @@ class ProblemSerializer(serializers.Serializer):
         return instance
 '''
 
+
 class ProblemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Problem
         fields = ('id', 'name', 'author', 'description', 'difficulty', 'good')
-

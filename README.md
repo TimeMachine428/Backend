@@ -49,4 +49,34 @@ python manage.py test
 ```
 ./test.sh
 ```
+# Running Project
+Sorry but your gonna need docker, check the readme on Frontend
 
+```
+docker-compose up
+```
+
+# API
+These are the rest api that are available
+
+## Problems
+This is the endpoint for all problems:
+
+```
+http://localhost:8000/problems/
+```
+
+Note: The last slash is important!
+
+This api has GET and POST.
+
+
+For individual problems:
+
+```
+http://localhost:8000/problems/#/
+```
+
+Note: Again the slash is important!
+
+This api has GET, PUT, and DELETE.
