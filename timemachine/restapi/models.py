@@ -28,7 +28,7 @@ class Problem(models.Model):
         ]
     )
     solution = models.TextField('solution', blank=False)
-    pub_date = models.DateTimeField('date published')
+    pub_date = models.DateTimeField('date published', auto_now_add=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -42,7 +42,7 @@ class Problem(models.Model):
 
 class Rating(models.Model):
     message = models.CharField(max_length=300)
-    date = models.DateTimeField('review date')
+    date = models.DateTimeField('review date', auto_now_add=True, blank=True)
     rating = models.PositiveSmallIntegerField(
         'user rating',
         validators=[
