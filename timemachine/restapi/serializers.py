@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from restapi.models import Problem
+from restapi.models import Problem, Rating
 
 '''
 class ProblemSerializer(serializers.Serializer):
@@ -29,3 +29,9 @@ class ProblemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Problem
         fields = ('id', 'name', 'author', 'description', 'difficulty', 'good')
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = ('id', 'title', 'date', 'rating', 'content')
