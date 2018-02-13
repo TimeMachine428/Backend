@@ -1,8 +1,8 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from problems.models import Problem
-from problems.serializers import ProblemSerializer
+from restapi.models import Problem
+from restapi.serializers import ProblemSerializer
 
 
 @api_view(['GET', 'POST'])

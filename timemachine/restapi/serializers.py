@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from problems.models import Problem
+from restapi.models import Problem
 
 '''
 class ProblemSerializer(serializers.Serializer):
