@@ -30,3 +30,14 @@ class Rating(models.Model):
 
     class Meta:
         ordering = ('date',)
+
+
+class Solution(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    code = models.TextField()
+    language = models.CharField(default='python', max_length=100)
+    output = models.TextField()
+    pending = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ('created',)

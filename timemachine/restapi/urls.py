@@ -3,10 +3,12 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from restapi import views
 
 urlpatterns = [
-    url(r'^problems/(?P<pk>[0-9]+)/$', views.problems_detail),
-    url(r'^problems/$', views.problems_list),
-    url(r'^ratings/(?P<pk>[0-9]+)/$', views.ratings_detail),
-    url(r'^ratings/$', views.ratings_list),
+    url(r'^problem/(?P<pk>[0-9]+)/$', views.problem_detail),
+    url(r'^problem/$', views.problem_list),
+    url(r'^rating/(?P<pk>[0-9]+)/$', views.rating_detail),
+    url(r'^rating/$', views.rating_list),
+    url(r'^solution/(?P<pk>[0-9]+)/$', views.solution_detail),
+    url(r'^solution/$', views.solution_list),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
