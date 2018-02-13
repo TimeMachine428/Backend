@@ -49,4 +49,78 @@ python manage.py test
 ```
 ./test.sh
 ```
+# Running Project
+Sorry but your gonna need docker, check the readme on Frontend
 
+```
+docker-compose up
+```
+
+Nevermind docker has left us hanging all gods are dead. 
+
+```
+source env/bin/activate
+pip install -r requirements.txt
+python manage.py runserver 0.0.0.0:8000
+```
+
+# API
+These are the rest api that are available
+
+## Problems
+This is the endpoint for all problems:
+
+```
+http://localhost:8000/restapi/problem/
+```
+
+Note: The last slash is important!
+
+This api has GET and POST.
+
+
+For individual problems:
+
+```
+http://localhost:8000/restapi/problem/#/
+```
+
+Note: Again the slash is important!
+
+This api has GET, PUT, and DELETE.
+
+## Rating
+This is the endpoint for all ratings:
+
+```
+http://localhost:8000/restapi/rating/
+```
+
+This api has GET and POST.
+
+
+For individual problems:
+
+```
+http://localhost:8000/restapi/rating/#/
+```
+
+This api has GET, PUT, and DELETE.
+
+## Solution
+This is the endpoint for all solutions:
+
+```
+http://localhost:8000/restapi/solution/
+```
+
+This api has GET and POST.
+
+
+For individual problems:
+
+```
+http://localhost:8000/restapi/solution/#/
+```
+
+This api has GET, PUT, and DELETE.
