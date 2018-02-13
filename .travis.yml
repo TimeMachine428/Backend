@@ -17,3 +17,5 @@ install:
 script:
     - ./test.sh
 
+notifications:
+    slack: ecse428timemachine:xBdL1nHr6GMzMwAQxYBxNTFR
