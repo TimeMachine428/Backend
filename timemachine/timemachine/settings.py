@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'timemachine',
         'USER': 'root',
-        'PASSWORD': 'secret',
+        'PASSWORD': os.getenv('MYSQL_PASSWORD', 'secret'),
         'HOST': os.getenv('MYSQL_HOST', '127.0.0.1'),   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }

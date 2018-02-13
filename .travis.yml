@@ -7,6 +7,9 @@ python:
 services:
     - mysql
 
+env:
+    - MYSQL_PASSWORD=""
+
 install:
     - pip install -r requirements.txt
 
