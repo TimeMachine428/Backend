@@ -56,6 +56,14 @@ Sorry but your gonna need docker, check the readme on Frontend
 docker-compose up
 ```
 
+Nevermind docker has left us hanging all gods are dead. 
+
+```
+source env/bin/activate
+pip install -r requirements.txt
+python manage.py runserver 0.0.0.0:8000
+```
+
 # API
 These are the rest api that are available
 
@@ -63,7 +71,7 @@ These are the rest api that are available
 This is the endpoint for all problems:
 
 ```
-http://localhost:8000/problems/
+http://localhost:8000/restapi/problems/
 ```
 
 Note: The last slash is important!
@@ -74,7 +82,7 @@ This api has GET and POST.
 For individual problems:
 
 ```
-http://localhost:8000/problems/#/
+http://localhost:8000/restapi/problems/#/
 ```
 
 Note: Again the slash is important!
