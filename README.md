@@ -27,12 +27,28 @@ Ensure you're in the virtual environment for the project, then run
 pip install -r requirements.txt
 ```
 
+### Configuring MySQL and Redis with Docker Compose
+
+You'll need to run MySQL and Redis on localhost in order for the app to work. With docker compose this is as simple as running
+```
+docker-compose up
+```
+
+If you're running using a docker-machine VM then set the environment variables so that when you run the app locally
+it'll know where to reach the machine.
+```
+MYSQL_HOST=*Insert Docker VM IP here*
+REDIS_HOST=*Insert Docker VM IP here*
+```
+
 ### Installing New Packages
 
-If you require a new package during development, ensure that you add a line for it in requirements.txt.
-The easiest way to do this is to use the `--save` flag with pip.
+If you require a new package during development, ensure that you add a line for it in requirements.txt. 
+If you're working in a virtualenv, then you can also run the to update the requirements.txt file.
+
+##### Don't do this if you're not using a virtualenv or you'll get a slap
 ```
-pip install --save [package]
+pip freeze > requirements.txt
 ```
 
 # Testing
