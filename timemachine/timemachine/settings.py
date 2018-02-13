@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_rq',
+    'submissions',
 ]
 
 MIDDLEWARE = [
@@ -75,8 +77,12 @@ WSGI_APPLICATION = 'timemachine.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'timemachine',
+        'USER': 'root',
+        'PASSWORD': 'secret',
+        'HOST': os.getenv('MYSQL_HOST', '127.0.0.1'),   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
     }
 }
 
@@ -118,3 +124,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': os.getenv('REDIS_HOST', 'localhost'),
+        'PORT': 6379,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 60000,
+    }
+}
