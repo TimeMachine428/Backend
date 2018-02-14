@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_rq',
+    'submissions',
     'rest_framework',
     'restapi.apps.RestApiConfig',
     'corsheaders',
@@ -79,8 +81,12 @@ WSGI_APPLICATION = 'timemachine.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'timemachine',
+        'USER': 'root',
+        'PASSWORD': os.getenv('MYSQL_PASSWORD', 'secret'),
+        'HOST': os.getenv('MYSQL_HOST', '127.0.0.1'),   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
     }
 }
 
@@ -123,6 +129,15 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': os.getenv('REDIS_HOST', 'localhost'),
+        'PORT': 6379,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 60000,
+    }
+}
 
 CORS_ORIGIN_ALLOW_ALL = True
 CSRF_COOKIE_NAME = "csrftoken"

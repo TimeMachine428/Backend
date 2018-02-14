@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e
+
 python timemachine/manage.py test
 
 echo "Linting..."
