@@ -8,11 +8,11 @@ import datetime
 
 
 class Problem(models.Model):
-    title = models.CharField('title', max_length=200, blank=False)
-    programming_language = models.CharField('programming language', max_length=100, blank=False)
-    author = models.CharField(max_length=100, blank=True, default='')
+    title = models.CharField('title', max_length=200)
+    programming_language = models.CharField('programming language', max_length=100)
+    author = models.CharField(max_length=100)
     # author = models.ForeignKey(User, on_delete=models.CASCADE)
-    description = models.TextField('description', blank=False)
+    description = models.TextField('description')
     difficulty = models.IntegerField(
         'difficulty',
         validators=[
@@ -27,14 +27,14 @@ class Problem(models.Model):
             MinValueValidator(0)
         ]
     )
-    solution = models.TextField('solution', blank=False)
+    solution = models.TextField('solution')
     pub_date = models.DateTimeField('date published', auto_now_add=True, blank=True)
 
-    def __str__(self):
-        return self.title
-
-    def was_published_last_week(self):
-        return self.pub_date >= timezone.now() - datetime.timedelta(days=7)
+    # def __str__(self):
+    #     return self.title
+    #
+    # def was_published_last_week(self):
+    #     return self.pub_date >= timezone.now() - datetime.timedelta(days=7)
 
     class Meta:
         ordering = ('difficulty',)

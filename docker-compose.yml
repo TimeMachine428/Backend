@@ -5,6 +5,8 @@ services:
     build: ./
     ports:
       - 80:80
+    volumes:
+      - .:/app
     environment:
       - REDIS_HOST=redis
       - MYSQL_HOST=mysql
