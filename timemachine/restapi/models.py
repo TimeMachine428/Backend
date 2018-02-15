@@ -32,7 +32,7 @@ class Problem(models.Model):
 
     def __str__(self):
         return self.title
-   
+
     def was_published_last_week(self):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=7)
 
