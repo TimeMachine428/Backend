@@ -30,11 +30,11 @@ class Problem(models.Model):
     solution = models.TextField('solution')
     pub_date = models.DateTimeField('date published', auto_now_add=True, blank=True)
 
-    # def __str__(self):
-    #     return self.title
-    #
-    # def was_published_last_week(self):
-    #     return self.pub_date >= timezone.now() - datetime.timedelta(days=7)
+    def __str__(self):
+        return self.title
+   
+    def was_published_last_week(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=7)
 
     class Meta:
         ordering = ('difficulty',)
