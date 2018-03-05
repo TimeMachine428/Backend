@@ -2,8 +2,8 @@ from django.contrib import admin
 from .models import *
 
 # Register your models here.
-admin.register(Problem)
-admin.register(TestCase)
-admin.register(Rating)
-admin.register(Solution)
-admin.register(User)
+admin.site.register(Problem)
+admin.site.register(TestCase)
+admin.site.register(Rating)
+admin.site.register(Solution)
+admin.site.register(User)

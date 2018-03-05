@@ -14,9 +14,8 @@ def current_milli_time():
 
 class Job(models.Model):
     name = models.CharField(blank=False, max_length=40)
-    code = models.TextField(blank=False)
-    method = models.CharField(blank=False, max_length=50)
-    metadata = models.TextField(default="{}")
+    solution = models.ForeignKey('restapi.Solution', related_name='jobs', on_delete=models.CASCADE, null=True)
+    testcase = models.ForeignKey('restapi.TestCase', related_name='jobs', on_delete=models.CASCADE, null=True)
     completed = models.BooleanField(default=False)
     success = models.BooleanField(default=False)
     error = models.TextField(blank=True)
@@ -25,12 +24,16 @@ class Job(models.Model):
     def save_code(self):
         directory = tempfile.mkdtemp(prefix=self.name + '_')
         with open(os.path.join(directory, '__init__.py'), 'w') as f:
-            f.write(self.code)
+            f.write(self.solution.code)
 
         return directory
 
     def decode_meta(self):
-        return json.loads(self.metadata)
+        return {
+            "method": self.testcase.method,
+            "inputs": json.loads(self.testcase.inputs),
+            "outputs": json.loads(self.testcase.outputs),
+        }
 
     def run(self):
         start_millis = current_milli_time()

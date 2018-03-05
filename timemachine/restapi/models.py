@@ -1,7 +1,9 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
 import datetime
+import json
 
 
 # Create your models here.
@@ -44,6 +46,14 @@ class TestCase(models.Model):
     outputs = models.TextField(default="[]")
     problem = models.ForeignKey(to=Problem, on_delete=models.CASCADE)
 
+    def __str__(self):
+        input_array = json.loads(self.inputs)
+        output_tuple = json.loads(self.outputs)
+        return "%s: %s(%s)==%s" % (self.problem.title,
+                                   self.method,
+                                   ', '.join('%s' % i for i in input_array),
+                                   ', '.join('%s' % i for i in output_tuple))
+
 
 class Rating(models.Model):
     message = models.CharField(max_length=300)
@@ -66,15 +76,10 @@ class Solution(models.Model):
     code = models.TextField()
     language = models.CharField(default='python', max_length=100)
     output = models.TextField()
-    pending = models.BooleanField(default=True)
 
     class Meta:
         ordering = ('created',)
 
 
-class User(models.Model):
-    github_id = models.IntegerField(blank=False)
-    temp_usr = models.CharField('username', max_length=60, blank=False)
-
-    def __str__(self):
-        return self.temp_usr
+class User(AbstractUser):
+    github_id = models.IntegerField(null=True)

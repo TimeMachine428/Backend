@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'mqjmh6-862*t_b)p6^f#u@+r57fgp-n^sckgcnn25jx#*_y6pe'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django_rq',
     'submissions',
     'rest_framework',
-    'restapi.apps.RestApiConfig',
+    'restapi',
     'corsheaders',
 ]
 
@@ -109,6 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'restapi.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
