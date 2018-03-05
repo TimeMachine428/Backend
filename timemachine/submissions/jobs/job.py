@@ -44,8 +44,7 @@ class Job(models.Model):
         self.completed = True
 
         if isinstance(result, Exception):
-            exc_type, exc_value, _ = sys.exc_info()
-            self.error = traceback.format_exception_only(exc_type, exc_value)
+            self.error = str(result)
             self.success = False
         else:
             self.error = ""

@@ -39,8 +39,11 @@ class TestCaseJob(Job):
         except Exception as e:
             return e
 
-        if len(outputs) == 1 and outputs[0] == result:
-            return True
+        if len(outputs) == 1:
+            if outputs[0] == result:
+                return True
+            else:
+                return ValueError("Result %s doesn't match the expected result %s" % (result, outputs[0]))
 
         # Check the if result is a singleton, or tuple
         if isinstance(result, collections.Iterable) and len(result) == len(outputs):
