@@ -10,8 +10,7 @@ import datetime
 class Problem(models.Model):
     title = models.CharField('title', max_length=200, blank=False)
     programming_language = models.CharField('programming language', max_length=100, blank=False)
-    author = models.CharField(max_length=100, blank=True, default='')
-    # author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.OneToOneField('User', on_delete=models.CASCADE, null=True)
     description = models.TextField('description', blank=False)
     difficulty = models.IntegerField(
         'difficulty',
@@ -27,7 +26,6 @@ class Problem(models.Model):
             MinValueValidator(0)
         ]
     )
-    solution = models.TextField('solution', blank=False)
     pub_date = models.DateTimeField('date published')
 
     def __str__(self):
@@ -38,6 +36,13 @@ class Problem(models.Model):
 
     class Meta:
         ordering = ('difficulty',)
+
+
+class TestCase(models.Model):
+    method = models.CharField(max_length=200, blank=False)
+    inputs = models.TextField(default="[]")
+    outputs = models.TextField(default="[]")
+    problem = models.ForeignKey(to=Problem, on_delete=models.CASCADE)
 
 
 class Rating(models.Model):
