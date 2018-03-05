@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import *
+from .models import Problem, TestCase, Rating, Solution, User
 
 # Register your models here.
 admin.site.register(Problem)

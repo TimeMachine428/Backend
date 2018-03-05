@@ -16,4 +16,3 @@ class JobSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
         fields = ('id', 'testcase', 'name', 'completed', 'success', 'error', 'execution_time_millis')
-
