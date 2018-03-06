@@ -25,7 +25,6 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('django-rq/', include('django_rq.urls')),
     path('admin/', admin.site.urls),
-    path('submissions/', include('submissions.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^restapi/', include('restapi.urls')),
     url(r'^', include(router.urls)),
