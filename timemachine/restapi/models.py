@@ -1,7 +1,9 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
 import datetime
+import json
 
 
 # Create your models here.
@@ -10,8 +12,7 @@ import datetime
 class Problem(models.Model):
     title = models.CharField('title', max_length=200, blank=False)
     programming_language = models.CharField('programming language', max_length=100, blank=False)
-    author = models.CharField(max_length=100, blank=True, default='')
-    # author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.OneToOneField('User', on_delete=models.CASCADE, null=True)
     description = models.TextField('description', blank=False)
     difficulty = models.IntegerField(
         'difficulty',
@@ -27,7 +28,6 @@ class Problem(models.Model):
             MinValueValidator(0)
         ]
     )
-    solution = models.TextField('solution', blank=False)
     pub_date = models.DateTimeField('date published')
 
     def __str__(self):
@@ -38,6 +38,21 @@ class Problem(models.Model):
 
     class Meta:
         ordering = ('difficulty',)
+
+
+class TestCase(models.Model):
+    method = models.CharField(max_length=200, blank=False)
+    inputs = models.TextField(default="[]")
+    outputs = models.TextField(default="[]")
+    problem = models.ForeignKey(to=Problem, on_delete=models.CASCADE)
+
+    def __str__(self):
+        input_array = json.loads(self.inputs)
+        output_tuple = json.loads(self.outputs)
+        return "%s: %s(%s)==%s" % (self.problem.title,
+                                   self.method,
+                                   ', '.join('%s' % i for i in input_array),
+                                   ', '.join('%s' % i for i in output_tuple))
 
 
 class Rating(models.Model):
@@ -61,15 +76,10 @@ class Solution(models.Model):
     code = models.TextField()
     language = models.CharField(default='python', max_length=100)
     output = models.TextField()
-    pending = models.BooleanField(default=True)
 
     class Meta:
         ordering = ('created',)
 
 
-class User(models.Model):
-    github_id = models.IntegerField(blank=False)
-    temp_usr = models.CharField('username', max_length=60, blank=False)
-
-    def __str__(self):
-        return self.temp_usr
+class User(AbstractUser):
+    github_id = models.IntegerField(null=True)

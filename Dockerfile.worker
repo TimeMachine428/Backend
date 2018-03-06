@@ -1,8 +1,9 @@
 FROM python:3.5
 
-COPY requirements.txt /app/
-WORKDIR /app/
+ADD requirements.txt /app/
+WORKDIR /app
 RUN pip install -r requirements.txt
 
-COPY timemachine/ /app
+ADD . /app
+WORKDIR /app/timemachine
 CMD python manage.py rqworker default
