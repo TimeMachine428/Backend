@@ -1,30 +1,40 @@
 from rest_framework import serializers
-from restapi.models import Problem, Rating, Solution, TestCase
-from submissions.serializers import JobSerializer
+from restapi.models import Problem, Rating, Solution, User
+from submissions.serializers import JobSerializer, TestCaseSerializer
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'github_id', 'is_staff')
 
 
 class ProblemSerializer(serializers.ModelSerializer):
+    author = UserSerializer(read_only=True)
+    test_cases = TestCaseSerializer(many=True, read_only=True)
+    pub_date = serializers.ReadOnlyField()
+    rating = serializers.ReadOnlyField(default=5)
+
     class Meta:
         model = Problem
-        fields = ('id', 'name', 'author', 'description', 'difficulty', 'good')
+        fields = ('id', 'title', 'author', 'test_cases', 'description', 'difficulty', 'rating', 'pub_date')
 
 
 class RatingSerializer(serializers.ModelSerializer):
+    rating_of = serializers.PrimaryKeyRelatedField(read_only=True)
+    reviewer = UserSerializer(read_only=True)
+
     class Meta:
         model = Rating
-        fields = ('id', 'title', 'date', 'rating', 'content')
+        fields = ('id', 'message', 'rating', 'date', 'content', 'rating_of', 'reviewer')
 
 
 class SolutionSerializer(serializers.ModelSerializer):
     jobs = JobSerializer(many=True, read_only=True)
+    author = UserSerializer(read_only=True)
+    output = serializers.ReadOnlyField(default="")
 
     class Meta:
         model = Solution
-        fields = ('id', 'created', 'code', 'language', 'output', 'jobs')
-
-
-class TestCaseSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = TestCase
-        fields = ('id', 'method', 'inputs', 'outputs')
+        fields = ('id', 'created', 'code', 'language', 'output', 'jobs', 'author')

@@ -1,134 +1,98 @@
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from restapi.models import Problem, Rating, Solution
-from restapi.serializers import ProblemSerializer, RatingSerializer, SolutionSerializer
+from rest_framework import generics
+from restapi.models import Problem
+from restapi.serializers import ProblemSerializer, RatingSerializer, SolutionSerializer, TestCaseSerializer
+from submissions.evaluate import evaluate
 
 
-'''
-Problem API
-'''
+class ProblemAPIView(generics.ListCreateAPIView):
+    serializer_class = ProblemSerializer
+
+    def get_queryset(self):
+        return Problem.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
-@api_view(['GET', 'POST'])
-def problem_list(request, format=None):
-    if request.method == 'GET':
-        problems = Problem.objects.all()
-        serializer = ProblemSerializer(problems, many=True)
-        return Response(serializer.data)
+class ProblemRUDView(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'pk'
+    serializer_class = ProblemSerializer
 
-    elif request.method == 'POST':
-        serializer = ProblemSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self):
+        return Problem.objects.all()
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def problem_detail(request, pk, format=None):
-    try:
-        problem = Problem.objects.get(pk=pk)
-    except Problem.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+class TestCaseAPIView(generics.ListCreateAPIView):
+    serializer_class = TestCaseSerializer
 
-    if request.method == 'GET':
-        serializer = ProblemSerializer(problem)
-        return Response(serializer.data)
+    def get_queryset(self):
+        problem_id = self.kwargs.get('problem_id')
+        problem_obj = Problem.objects.get(pk=problem_id)
+        return problem_obj.test_cases.all()
 
-    elif request.method == 'PUT':
-        serializer = ProblemSerializer(problem, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        problem.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def perform_create(self, serializer):
+        problem_id = self.kwargs.get('problem_id')
+        problem_obj = Problem.objects.get(pk=problem_id)
+        serializer.save(problem=problem_obj)
 
 
-'''
-Rating API
-'''
+class TestCaseRUDView(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'pk'
+    serializer_class = TestCaseSerializer
+
+    def get_queryset(self):
+        problem_id = self.kwargs.get('problem_id')
+        problem_obj = Problem.objects.get(pk=problem_id)
+        return problem_obj.test_cases.all()
 
 
-@api_view(['GET', 'POST'])
-def rating_list(request, format=None):
-    if request.method == 'GET':
-        ratings = Rating.objects.all()
-        serializer = RatingSerializer(ratings, many=True)
-        return Response(serializer.data)
+class RatingAPIView(generics.ListCreateAPIView):
+    lookup_field = 'pk'
+    serializer_class = RatingSerializer
 
-    elif request.method == 'POST':
-        serializer = RatingSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self):
+        problem_id = self.kwargs.get('problem_id')
+        problem_obj = Problem.objects.get(pk=problem_id)
+        return problem_obj.ratings.all()
 
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def rating_detail(request, pk, format=None):
-    try:
-        rating = Rating.objects.get(pk=pk)
-    except Rating.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = RatingSerializer(rating)
-        return Response(serializer.data)
-
-    elif request.method == 'PUT':
-        serializer = RatingSerializer(rating, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        rating.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def perform_create(self, serializer):
+        problem_id = self.kwargs.get('problem_id')
+        problem_obj = Problem.objects.get(pk=problem_id)
+        serializer.save(review_of=problem_obj, reviewer=self.request.user)
 
 
-'''
-Solution API
-'''
+class RatingRUDView(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'pk'
+    serializer_class = RatingSerializer
+
+    def get_queryset(self):
+        problem_id = self.kwargs.get('problem_id')
+        problem_obj = Problem.objects.get(pk=problem_id)
+        return problem_obj.ratings.all()
 
 
-@api_view(['GET', 'POST'])
-def solution_list(request, format=None):
-    if request.method == 'GET':
-        soluton = Solution.objects.all()
-        serializer = SolutionSerializer(soluton, many=True)
-        return Response(serializer.data)
+class SolutionRetrieveView(generics.RetrieveAPIView):
+    lookup_field = 'pk'
+    serializer_class = SolutionSerializer
 
-    elif request.method == 'POST':
-        serializer = SolutionSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self):
+        problem_id = self.kwargs.get('problem_id')
+        problem_obj = Problem.objects.get(pk=problem_id)
+        return problem_obj.solutions.all()
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def solution_detail(request, pk, format=None):
-    try:
-        solution = Solution.objects.get(pk=pk)
-    except Rating.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+class SolutionAPIView(generics.ListCreateAPIView):
+    serializer_class = SolutionSerializer
 
-    if request.method == 'GET':
-        serializer = SolutionSerializer(solution)
-        return Response(serializer.data)
+    def get_queryset(self):
+        problem_id = self.kwargs.get('problem_id')
+        problem_obj = Problem.objects.get(pk=problem_id)
+        return problem_obj.solutions.all()
 
-    elif request.method == 'PUT':
-        serializer = SolutionSerializer(solution, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def perform_create(self, serializer):
+        problem_id = self.kwargs.get('problem_id')
+        problem_obj = Problem.objects.get(pk=problem_id)
+        instance = serializer.save(author=self.request.user, problem=problem_obj)
 
-    elif request.method == 'DELETE':
-        solution.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        # Submit the solution for evaluation
+        evaluate(problem_obj, instance)

@@ -4,10 +4,11 @@ from restapi.models import TestCase
 
 
 class TestCaseSerializer(serializers.ModelSerializer):
+    problem = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = TestCase
-        fields = ('id', 'method', 'inputs', 'outputs')
+        fields = ('id', 'method', 'inputs', 'outputs', 'problem')
 
 
 class JobSerializer(serializers.ModelSerializer):
