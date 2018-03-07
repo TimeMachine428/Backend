@@ -68,7 +68,7 @@ class RatingAPIView(generics.ListCreateAPIView):
             problem.rating = new_rating
         else:
             n = problem.ratings.count()
-            problem.rating = ((n-1) * problem.rating + new_rating) / n
+            problem.rating = ((n - 1) * problem.rating + new_rating) / n
 
         problem.save()
 
