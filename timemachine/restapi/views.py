@@ -1,5 +1,5 @@
 from rest_framework import generics
-from restapi.models import Problem
+from restapi.models import Problem, Rating
 from restapi.serializers import ProblemSerializer, RatingSerializer, SolutionSerializer, TestCaseSerializer
 from restapi.permissions import IsOwnerOrReadOnly
 from submissions.evaluate import evaluate
@@ -60,8 +60,17 @@ class RatingAPIView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         problem_id = self.kwargs.get('problem_id')
-        problem_obj = Problem.objects.get(pk=problem_id)
-        serializer.save(review_of=problem_obj, reviewer=self.request.user)
+        problem = Problem.objects.get(pk=problem_id)
+        rating = serializer.save(rating_of=problem, reviewer=self.request.user)
+
+        new_rating = rating.rating
+        if problem.rating is None:
+            problem.rating = new_rating
+        else:
+            n = problem.ratings.count()
+            problem.rating = ((n-1) * problem.rating + new_rating) / n
+
+        problem.save()
 
 
 class RatingRUDView(generics.RetrieveUpdateDestroyAPIView):
@@ -73,6 +82,32 @@ class RatingRUDView(generics.RetrieveUpdateDestroyAPIView):
         problem_id = self.kwargs.get('problem_id')
         problem_obj = Problem.objects.get(pk=problem_id)
         return problem_obj.ratings.all()
+
+    def perform_update(self, serializer):
+        old_rating = self.get_object().rating
+
+        problem_id = self.kwargs.get('problem_id')
+        problem = Problem.objects.get(pk=problem_id)
+        rating = serializer.save(rating_of=problem, reviewer=self.request.user)
+
+        new_rating = rating.rating
+        n = problem.ratings.count()
+
+        problem.rating += (new_rating - old_rating) / n
+        problem.save()
+
+    def perform_destroy(self, instance):
+        problem_id = self.kwargs.get('problem_id')
+        problem = Problem.objects.get(pk=problem_id)
+        n = problem.ratings.count()
+
+        if n == 1:
+            problem.rating = None
+        else:
+            problem.rating = (n * problem.rating - instance.rating) / (n - 1)
+
+        problem.save()
+        super().perform_destroy(instance)
 
 
 class SolutionRetrieveView(generics.RetrieveAPIView):
