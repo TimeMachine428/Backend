@@ -24,6 +24,7 @@ class ProblemSerializer(serializers.ModelSerializer):
 class RatingSerializer(serializers.ModelSerializer):
     rating_of = serializers.PrimaryKeyRelatedField(read_only=True)
     reviewer = UserSerializer(read_only=True)
+    date = serializers.ReadOnlyField()
 
     class Meta:
         model = Rating

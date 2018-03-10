@@ -21,7 +21,7 @@ class Problem(models.Model):
             MinValueValidator(0)
         ]
     )
-    rating = models.IntegerField(
+    rating = models.FloatField(
         'rating',
         validators=[
             MaxValueValidator(5),
