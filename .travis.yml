@@ -6,6 +6,7 @@ python:
 
 services:
     - mysql
+    - redis-server
 
 env:
     - MYSQL_PASSWORD=""
