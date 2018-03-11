@@ -1,7 +1,7 @@
 from rest_framework import generics
 from restapi.models import Problem, Rating
 from restapi.serializers import ProblemSerializer, RatingSerializer, SolutionSerializer, TestCaseSerializer
-from restapi.permissions import IsOwnerOrReadOnly
+from restapi.permissions import IsOwnerOrReadOnly, IsOwnerOfProblemOrReadOnly
 from submissions.evaluate import evaluate
 
 
@@ -25,7 +25,9 @@ class ProblemRUDView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class TestCaseAPIView(generics.ListCreateAPIView):
+    lookup_field = 'problem_id'
     serializer_class = TestCaseSerializer
+    permission_classes = [IsOwnerOfProblemOrReadOnly]
 
     def get_queryset(self):
         problem_id = self.kwargs.get('problem_id')

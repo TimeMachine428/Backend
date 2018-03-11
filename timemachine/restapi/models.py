@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
 import datetime
 import json
 
@@ -44,6 +45,9 @@ class Problem(models.Model):
     class Meta:
         ordering = ('difficulty',)
 
+    def get_absolute_url(self):
+        return reverse('restapi:problems-rud', kwargs={'pk': self.pk})
+
 
 class TestCase(models.Model):
     method = models.CharField(max_length=200, blank=False)
@@ -62,6 +66,9 @@ class TestCase(models.Model):
     @property
     def owner(self):
         return self.problem.owner
+
+    def get_absolute_url(self):
+        return reverse('restapi:testcases-rud', kwargs={'problem_id': self.problem.id, 'pk': self.pk})
 
 
 class Rating(models.Model):
@@ -85,6 +92,9 @@ class Rating(models.Model):
     def owner(self):
         return self.reviewer
 
+    def get_absolute_url(self):
+        return reverse('restapi:ratings-rud', kwargs={'problem_id': self.rating_of.id, 'pk': self.pk})
+
 
 class Solution(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -96,6 +106,9 @@ class Solution(models.Model):
 
     class Meta:
         ordering = ('created',)
+
+    def get_absolute_url(self):
+        return reverse('restapi:solutions-retrieve', kwargs={'problem_id': self.problem.id, 'pk': self.pk})
 
 
 class User(AbstractUser):

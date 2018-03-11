@@ -1,10 +1,8 @@
-from django.db import models
+from django.db import models, close_old_connections
 import django_rq
 import tempfile
 import os
 import json
-import traceback
-import sys
 import time
 
 

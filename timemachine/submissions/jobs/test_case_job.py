@@ -6,10 +6,6 @@ import os
 
 class TestCaseJob(Job):
 
-    # Define this class as a proxy class, since we don't want multi-table inheritance in this case
-    class Meta:
-        proxy = True
-
     def execute(self):
         # TODO: Implement custom errors for this module
 
