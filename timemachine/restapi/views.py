@@ -2,6 +2,7 @@ from rest_framework import generics
 from restapi.models import Problem, Rating, User
 from restapi.serializers import ProblemSerializer, RatingSerializer, SolutionSerializer, TestCaseSerializer, UserSerializer
 from restapi.permissions import IsOwnerOrReadOnly, IsOwnerOfProblemOrReadOnly
+from rest_framework.permissions import AllowAny
 from submissions.evaluate import evaluate
 
 
@@ -141,6 +142,8 @@ class SolutionAPIView(generics.ListCreateAPIView):
 
 class UserAPIView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
+    model = User
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         qs = User.objects.all()
@@ -155,8 +158,8 @@ class UserAPIView(generics.ListCreateAPIView):
             qs = []
         return qs
 
-    def perform_create(self, serializer):
-        serializer.save()
+    # def perform_create(self, serializer):
+    #     serializer.save()
 
 
 class UserRUDView(generics.RetrieveUpdateDestroyAPIView):
