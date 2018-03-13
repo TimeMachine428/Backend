@@ -10,4 +10,6 @@ urlpatterns = [
     url(r'problems/(?P<problem_id>\d+)/ratings/(?P<pk>\d+)/$', views.RatingRUDView.as_view(), name='ratings-rud'),
     url(r'problems/(?P<problem_id>\d+)/solutions/', views.SolutionAPIView.as_view(), name='solutions-listcreate'),
     url(r'problems/(?P<problem_id>\d+)/solutions/(?P<pk>\d+)/$', views.SolutionRetrieveView.as_view(), name='solutions-retrieve'),
+    url(r'users/$', views.UserAPIView.as_view(), name='user-listcreate'),
+    url(r'users/(?P<pk>\d+)/$', views.UserRUDView.as_view(), name='user-rud'),
 ]

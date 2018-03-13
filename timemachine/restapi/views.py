@@ -1,6 +1,6 @@
 from rest_framework import generics
-from restapi.models import Problem, Rating
-from restapi.serializers import ProblemSerializer, RatingSerializer, SolutionSerializer, TestCaseSerializer
+from restapi.models import Problem, Rating, User
+from restapi.serializers import ProblemSerializer, RatingSerializer, SolutionSerializer, TestCaseSerializer, UserSerializer
 from restapi.permissions import IsOwnerOrReadOnly, IsOwnerOfProblemOrReadOnly
 from submissions.evaluate import evaluate
 
@@ -137,3 +137,31 @@ class SolutionAPIView(generics.ListCreateAPIView):
 
         # Submit the solution for evaluation
         evaluate(problem_obj, instance)
+
+
+class UserAPIView(generics.ListCreateAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        qs = User.objects.all()
+        username = self.request.GET.get("username")
+        # password = self.request.GET.get("password")
+        # if username is not None and password is not None:
+        #     qs = qs.filter(username=username)
+        #     qs = qs.filter(password=password)
+        if username is not None:
+            qs = qs.filter(username=username).distinct()
+        else:
+            qs = []
+        return qs
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+
+class UserRUDView(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'pk'
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        return User.objects.all()

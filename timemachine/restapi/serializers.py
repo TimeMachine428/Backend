@@ -7,7 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'github_id', 'is_staff')
+        fields = ('id', 'username', 'github_id', 'is_staff', 'password')
 
 
 class ProblemSerializer(serializers.ModelSerializer):
