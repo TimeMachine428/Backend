@@ -10,7 +10,11 @@ class ProblemAPIView(generics.ListCreateAPIView):
     serializer_class = ProblemSerializer
 
     def get_queryset(self):
-        return Problem.objects.all()
+        qs = Problem.objects.all()
+        username = self.request.GET.get("author")
+        if username is not None:
+            qs = qs.filter(author_username=username).distinct()
+        return qs
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
