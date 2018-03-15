@@ -29,7 +29,7 @@ class ProblemSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     test_cases = TestCaseSerializer(many=True, read_only=True)
     pub_date = serializers.ReadOnlyField()
-    rating = serializers.ReadOnlyField(default=5)
+    rating = serializers.IntegerField(default=0)
 
     class Meta:
         model = Problem
