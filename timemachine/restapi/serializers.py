@@ -30,10 +30,11 @@ class ProblemSerializer(serializers.ModelSerializer):
     test_cases = TestCaseSerializer(many=True, read_only=True)
     pub_date = serializers.ReadOnlyField()
     rating = serializers.IntegerField(default=0)
+    author_username = serializers.ReadOnlyField()
 
     class Meta:
         model = Problem
-        fields = ('id', 'title', 'author', 'test_cases', 'description', 'difficulty', 'rating', 'pub_date')
+        fields = ('id', 'title', 'author', 'author_username', 'test_cases', 'description', 'difficulty', 'rating', 'pub_date')
 
 
 class RatingSerializer(serializers.ModelSerializer):

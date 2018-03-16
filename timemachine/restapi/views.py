@@ -1,13 +1,27 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
 from restapi.models import Problem, Rating, User
 from restapi.serializers import ProblemSerializer, RatingSerializer, SolutionSerializer, TestCaseSerializer, UserSerializer
 from restapi.permissions import IsOwnerOrReadOnly, IsOwnerOfProblemOrReadOnly
 from rest_framework.permissions import AllowAny
 from submissions.evaluate import evaluate
 
+SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS']
+
+
+class IsAuthenticatedOrReadOnly(permissions.BasePermission):
+    """
+    The request is authenticated as a user, or is a read-only request.
+    """
+
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS or request.user:
+            return True
+        return False
+
 
 class ProblemAPIView(generics.ListCreateAPIView):
     serializer_class = ProblemSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         qs = Problem.objects.all()
@@ -17,7 +31,7 @@ class ProblemAPIView(generics.ListCreateAPIView):
         return qs
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save(author=self.request.user, author_username=self.request.user.username)
 
 
 class ProblemRUDView(generics.RetrieveUpdateDestroyAPIView):
