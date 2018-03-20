@@ -172,3 +172,10 @@ class UserRUDView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return User.objects.all()
+
+    def perform_destroy(self, instance):
+        user_id = self.kwargs.get('user_id')
+        user= User.objects.get(pk=user_id)
+        n = problem.ratings.count()
+        
+        super().perform_destroy(instance)

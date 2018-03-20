@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.urls import reverse
 import datetime
 import json
@@ -110,6 +110,10 @@ class Solution(models.Model):
     def get_absolute_url(self):
         return reverse('restapi:solutions-retrieve', kwargs={'problem_id': self.problem.id, 'pk': self.pk})
 
+
+class UserManager(UserManager):
+    class Meta:
+        pass
 
 class User(AbstractUser):
     github_id = models.IntegerField(null=True)
