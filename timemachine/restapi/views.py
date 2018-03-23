@@ -8,14 +8,14 @@ from submissions.evaluate import evaluate
 
 class ProblemAPIView(generics.ListCreateAPIView):
     serializer_class = ProblemSerializer
-
+    ##get
     def get_queryset(self):
         qs = Problem.objects.all()
         username = self.request.GET.get("author")
         if username is not None:
             qs = qs.filter(author_username=username).distinct()
         return qs
-
+    #post
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
