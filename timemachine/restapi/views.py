@@ -151,15 +151,15 @@ class UserAPIView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         qs = User.objects.all()
-        username = self.request.GET.get("username")
-        # password = self.request.GET.get("password")
-        # if username is not None and password is not None:
-        #     qs = qs.filter(username=username)
-        #     qs = qs.filter(password=password)
-        if username is not None:
-            qs = qs.filter(username=username).distinct()
-        else:
-            qs = []
+        # username = self.request.GET.get("username")
+        # # password = self.request.GET.get("password")
+        # # if username is not None and password is not None:
+        # #     qs = qs.filter(username=username)
+        # #     qs = qs.filter(password=password)
+        # if username is not None:
+        #     qs = qs.filter(username=username).distinct()
+        # else:
+        #     qs = []
         return qs
 
     # def perform_create(self, serializer):
@@ -169,13 +169,14 @@ class UserAPIView(generics.ListCreateAPIView):
 class UserRUDView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'pk'
     serializer_class = UserSerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         return User.objects.all()
 
-    def perform_destroy(self, instance):
-        user_id = self.kwargs.get('user_id')
-        user= User.objects.get(pk=user_id)
-        n = problem.ratings.count()
+    # def perform_destroy(self, instance):
+    #     user_id = self.kwargs.get('user_id')
+    #     user= User.objects.get(pk=user_id)
+    #     n = problem.ratings.count()
         
-        super().perform_destroy(instance)
+    #     super().perform_destroy(instance)
