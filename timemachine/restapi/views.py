@@ -1,6 +1,7 @@
 from rest_framework import generics
 from restapi.models import Problem, Rating, User
-from restapi.serializers import ProblemSerializer, RatingSerializer, SolutionSerializer, TestCaseSerializer, UserSerializer
+from restapi.serializers import ProblemSerializer, RatingSerializer, SolutionSerializer, TestCaseSerializer, \
+    UserSerializer
 from restapi.permissions import IsOwnerOrReadOnly, IsOwnerOfProblemOrReadOnly
 from rest_framework.permissions import AllowAny
 from submissions.evaluate import evaluate
@@ -8,14 +9,16 @@ from submissions.evaluate import evaluate
 
 class ProblemAPIView(generics.ListCreateAPIView):
     serializer_class = ProblemSerializer
-    ##get
+
+    # get
     def get_queryset(self):
         qs = Problem.objects.all()
         username = self.request.GET.get("author")
         if username is not None:
             qs = qs.filter(author_username=username).distinct()
         return qs
-    #post
+
+    # post
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
@@ -142,6 +145,34 @@ class SolutionAPIView(generics.ListCreateAPIView):
 
         # Submit the solution for evaluation
         evaluate(problem_obj, instance)
+
+
+# ------------------- added for S14 - save solution ----------------------------------------
+class PartialSolutionAPIView(generics.ListCreateAPIView):
+    serializer_class = SolutionSerializer
+
+    def get_queryset(self):
+        problem_id = self.kwargs.get('problem_id')
+        problem_obj = Problem.objects.get(pk=problem_id)
+        return problem_obj.partialSolutions.all()
+
+    def perform_create(self, serializer):
+        problem_id = self.kwargs.get('problem_id')
+        problem_obj = Problem.objects.get(pk=problem_id)
+        instance = serializer.save(author=self.request.user, problem=problem_obj)
+
+        # Save the partial solution in the database and associate it with the particular author
+        savePartial(problem_obj, instance) # TODO: savePartial is not implemented yet
+
+
+class PartialSolutionRUDView(generics.RetrieveAPIView):
+    lookup_field = 'pk'
+    serializer_class = SolutionSerializer
+
+    def get_queryset(self):
+        problem_id = self.kwargs.get('problem_id')
+        problem_obj = Problem.objects.get(pk=problem_id)
+        return problem_obj.partialSolutions.all()
 
 
 class UserAPIView(generics.ListCreateAPIView):
