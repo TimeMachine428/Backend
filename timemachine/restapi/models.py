@@ -111,5 +111,22 @@ class Solution(models.Model):
         return reverse('restapi:solutions-retrieve', kwargs={'problem_id': self.problem.id, 'pk': self.pk})
 
 
+# added for S14
+class PartialSolution(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now_add=True)
+    code = models.TextField()
+    language = models.CharField(default='python', max_length=100)
+    output = models.TextField()
+    author = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, related_name='partialSolutions')
+    problem = models.ForeignKey('Problem', on_delete=models.CASCADE, null=True, related_name='partialSolutions')
+
+    class Meta:
+        ordering = ('created',)
+
+    def get_absolute_url(self):
+        return reverse('restapi:partialSolutions-retrieve', kwargs={'problem_id': self.problem.id, 'pk': self.pk})
+
+
 class User(AbstractUser):
     github_id = models.IntegerField(null=True)
