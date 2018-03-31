@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
 from rest_framework import routers
+from rest_framework_jwt.views import obtain_jwt_token
 
 router = routers.DefaultRouter()
 
@@ -26,6 +27,7 @@ urlpatterns = [
     path('django-rq/', include('django_rq.urls')),
     path('admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api-token-auth/', obtain_jwt_token),
     url(r'^restapi/', include(('restapi.urls', 'restapi'), namespace='restapi')),
     url(r'^', include(router.urls)),
 ]
