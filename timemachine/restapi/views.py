@@ -29,12 +29,13 @@ class ProblemAPIView(generics.ListCreateAPIView):
         qs = Problem.objects.all()
         username = self.request.GET.get("author")
         if username is not None:
-            qs = qs.filter(author_username=username).distinct()
+            user = User.objects.get(username=username)
+            qs = qs.filter(author=user).distinct()
         return qs
 
     # post
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user, author_username=self.request.user.username)
+        serializer.save(author=self.request.user)
 
 
 class ProblemRUDView(generics.RetrieveUpdateDestroyAPIView):
