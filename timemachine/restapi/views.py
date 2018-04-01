@@ -5,6 +5,7 @@ from restapi.serializers import ProblemSerializer, RatingSerializer, SolutionSer
 from restapi.permissions import IsOwnerOrReadOnly, IsOwnerOfProblemOrReadOnly
 from rest_framework.permissions import AllowAny
 from submissions.evaluate import evaluate
+from django.contrib.auth.models import AnonymousUser
 
 SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS']
 
@@ -15,7 +16,7 @@ class IsAuthenticatedOrReadOnly(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        if request.method in SAFE_METHODS or request.user:
+        if request.method in SAFE_METHODS or (request.user and not isinstance(request.user, AnonymousUser)):
             return True
         return False
 
