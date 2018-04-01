@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from restapi.models import Problem, Rating, Solution, User
+from restapi.models import Problem, Rating, Solution, User, PartialSolution
 from submissions.serializers import JobSerializer, TestCaseSerializer
 
 
@@ -30,10 +30,11 @@ class ProblemSerializer(serializers.ModelSerializer):
     test_cases = TestCaseSerializer(many=True, read_only=True)
     pub_date = serializers.ReadOnlyField()
     rating = serializers.IntegerField(default=0)
+    author_username = serializers.ReadOnlyField()
 
     class Meta:
         model = Problem
-        fields = ('id', 'title', 'author', 'test_cases', 'description', 'difficulty', 'rating', 'pub_date')
+        fields = ('id', 'title', 'author', 'author_username', 'test_cases', 'description', 'difficulty', 'rating', 'pub_date')
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -54,3 +55,15 @@ class SolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Solution
         fields = ('id', 'created', 'code', 'language', 'output', 'jobs', 'author')
+
+
+# added for S14
+class PartialSolutionSerializer(serializers.ModelSerializer):
+    jobs = JobSerializer(many=True, read_only=True)
+    author = UserSerializer(read_only=True)
+    output = serializers.ReadOnlyField(default="")
+
+    class Meta:
+        model = PartialSolution
+        fields = ('id', 'created', 'modified', 'code', 'language', 'output', 'jobs', 'author')
+
