@@ -87,7 +87,7 @@ These are the rest api that are available
 This is the endpoint for all problems:
 
 ```
-http://localhost:8000/restapi/problem/
+http://localhost:80/restapi/problem/
 ```
 
 Note: The last slash is important!
@@ -98,7 +98,7 @@ This api has GET and POST.
 For individual problems:
 
 ```
-http://localhost:8000/restapi/problem/#/
+http://localhost:80/restapi/problem/#/
 ```
 
 Note: Again the slash is important!
@@ -109,7 +109,7 @@ This api has GET, PUT, and DELETE.
 This is the endpoint for all ratings:
 
 ```
-http://localhost:8000/restapi/rating/
+http://localhost:80/restapi/rating/
 ```
 
 This api has GET and POST.
@@ -118,7 +118,7 @@ This api has GET and POST.
 For individual problems:
 
 ```
-http://localhost:8000/restapi/rating/#/
+http://localhost:80/restapi/rating/#/
 ```
 
 This api has GET, PUT, and DELETE.
@@ -127,7 +127,7 @@ This api has GET, PUT, and DELETE.
 This is the endpoint for all solutions:
 
 ```
-http://localhost:8000/restapi/solution/
+http://localhost:80/restapi/solution/
 ```
 
 This api has GET and POST.
@@ -136,7 +136,26 @@ This api has GET and POST.
 For individual problems:
 
 ```
-http://localhost:8000/restapi/solution/#/
+http://localhost:80/restapi/solution/#/
 ```
 
 This api has GET, PUT, and DELETE.
+
+## Partial Solutions
+This is the endpoint for all partial solutions:
+
+```
+http://localhost:80/restapi/problems/(?P<problem_id>\d+)/partial-solutions/$
+```
+
+This api has GET and POST.
+
+
+For individual problems:
+
+```
+http://localhost:80/restapi/problems/(?P<problem_id>\d+)/partial-solutions/(?P<pk>\d+)/$
+```
+
+This api has GET, PUT, and DELETE.
+
