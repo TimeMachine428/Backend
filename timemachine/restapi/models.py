@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.urls import reverse
 import datetime
 import json
@@ -115,7 +115,6 @@ class Solution(models.Model):
         return self.jobs.count() > 0 and all(job.success for job in self.jobs.all())
 
 
-# added for S14
 class PartialSolution(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     code = models.TextField()
