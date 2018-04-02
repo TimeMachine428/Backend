@@ -111,11 +111,6 @@ class Solution(models.Model):
         return reverse('restapi:solutions-retrieve', kwargs={'problem_id': self.problem.id, 'pk': self.pk})
 
 
-class UserManager(UserManager):
-    class Meta:
-        pass
-
-# added for S14
 class PartialSolution(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now_add=True)

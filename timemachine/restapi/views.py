@@ -176,9 +176,6 @@ class PartialSolutionAPIView(generics.ListCreateAPIView):
         problem_obj = Problem.objects.get(pk=problem_id)
         instance = serializer.save(author=self.request.user, problem=problem_obj)
 
-        # Save the partial solution in the database and associate it with the particular author
-        savePartial(problem_obj, instance) # TODO: savePartial is not implemented yet
-
 
 class PartialSolutionRUDView(generics.RetrieveAPIView):
     lookup_field = 'pk'
