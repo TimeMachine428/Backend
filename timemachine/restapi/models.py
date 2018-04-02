@@ -7,9 +7,6 @@ import datetime
 import json
 
 
-# Create your models here.
-
-
 class Problem(models.Model):
     title = models.CharField('title', max_length=200, blank=False)
     programming_language = models.CharField('programming language', max_length=100, blank=False)
@@ -41,6 +38,9 @@ class Problem(models.Model):
     @property
     def owner(self):
         return self.author
+
+    def has_solved(self, user):
+        return any(solution.correct for solution in Solution.objects.filter(problem=self, author=user))
 
     class Meta:
         ordering = ('difficulty',)
@@ -110,22 +110,27 @@ class Solution(models.Model):
     def get_absolute_url(self):
         return reverse('restapi:solutions-retrieve', kwargs={'problem_id': self.problem.id, 'pk': self.pk})
 
+    @property
+    def correct(self):
+        return self.jobs.count() > 0 and all(job.success for job in self.jobs.all())
+
 
 # added for S14
 class PartialSolution(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now_add=True)
     code = models.TextField()
-    language = models.CharField(default='python', max_length=100)
-    output = models.TextField()
-    author = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, related_name='partialSolutions')
-    problem = models.ForeignKey('Problem', on_delete=models.CASCADE, null=True, related_name='partialSolutions')
+    author = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, related_name='partial_solutions')
+    problem = models.ForeignKey('Problem', on_delete=models.CASCADE, null=True, related_name='partial_solutions')
 
     class Meta:
         ordering = ('created',)
 
     def get_absolute_url(self):
         return reverse('restapi:partialSolutions-retrieve', kwargs={'problem_id': self.problem.id, 'pk': self.pk})
+
+    @property
+    def owner(self):
+        return self.author
 
 
 class User(AbstractUser):

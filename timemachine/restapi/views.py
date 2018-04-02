@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions
 from restapi.models import Problem, Rating, User
 from restapi.serializers import ProblemSerializer, RatingSerializer, SolutionSerializer, TestCaseSerializer, \
-    UserSerializer
+    UserSerializer, PartialSolutionSerializer
 from restapi.permissions import IsOwnerOrReadOnly, IsOwnerOfProblemOrReadOnly
 from rest_framework.permissions import AllowAny
 from submissions.evaluate import evaluate
@@ -165,30 +165,33 @@ class SolutionAPIView(generics.ListCreateAPIView):
 
 # ------------------- added for S14 - save solution ----------------------------------------
 class PartialSolutionAPIView(generics.ListCreateAPIView):
-    serializer_class = SolutionSerializer
+    serializer_class = PartialSolutionSerializer
 
     def get_queryset(self):
         problem_id = self.kwargs.get('problem_id')
         problem_obj = Problem.objects.get(pk=problem_id)
-        return problem_obj.partialSolutions.all()
+
+        qs = problem_obj.partial_solutions.all()
+        author = self.request.user
+        qs = qs.filter(author=author)
+
+        return qs.order_by('-created')
 
     def perform_create(self, serializer):
         problem_id = self.kwargs.get('problem_id')
         problem_obj = Problem.objects.get(pk=problem_id)
-        instance = serializer.save(author=self.request.user, problem=problem_obj)
-
-        # Save the partial solution in the database and associate it with the particular author
-        savePartial(problem_obj, instance) # TODO: savePartial is not implemented yet
+        serializer.save(author=self.request.user, problem=problem_obj)
 
 
-class PartialSolutionRUDView(generics.RetrieveAPIView):
+class PartialSolutionRUDView(generics.RetrieveUpdateAPIView):
     lookup_field = 'pk'
-    serializer_class = SolutionSerializer
+    serializer_class = PartialSolutionSerializer
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
         problem_id = self.kwargs.get('problem_id')
         problem_obj = Problem.objects.get(pk=problem_id)
-        return problem_obj.partialSolutions.all()
+        return problem_obj.partial_solutions.all()
 
 
 class UserAPIView(generics.ListCreateAPIView):

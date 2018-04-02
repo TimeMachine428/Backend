@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from restapi.models import Problem, Rating, Solution, User, PartialSolution
 from submissions.serializers import JobSerializer, TestCaseSerializer
+from django.contrib.auth.models import AnonymousUser
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -31,10 +32,19 @@ class ProblemSerializer(serializers.ModelSerializer):
     pub_date = serializers.ReadOnlyField()
     rating = serializers.IntegerField(default=0)
     author_username = serializers.ReadOnlyField()
+    has_solved = serializers.SerializerMethodField(method_name='calculate_has_solved', read_only=True)
 
     class Meta:
         model = Problem
-        fields = ('id', 'title', 'author', 'author_username', 'test_cases', 'description', 'difficulty', 'rating', 'pub_date')
+        fields = ('id', 'title', 'author', 'author_username', 'test_cases', 'description', 'difficulty', 'rating', 'pub_date', 'has_solved')
+
+    def calculate_has_solved(self, instance):
+        request = self.context.get('request')
+        user = request.user
+        if user and not isinstance(user, AnonymousUser):
+            return instance.has_solved(user)
+        else:
+            return False
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -59,11 +69,11 @@ class SolutionSerializer(serializers.ModelSerializer):
 
 # added for S14
 class PartialSolutionSerializer(serializers.ModelSerializer):
-    jobs = JobSerializer(many=True, read_only=True)
-    author = UserSerializer(read_only=True)
-    output = serializers.ReadOnlyField(default="")
+    created = serializers.ReadOnlyField()
+    author = serializers.PrimaryKeyRelatedField(read_only=True)
+    problem = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = PartialSolution
-        fields = ('id', 'created', 'modified', 'code', 'language', 'output', 'jobs', 'author')
+        fields = ('id', 'created', 'code', 'author', 'problem')
 
