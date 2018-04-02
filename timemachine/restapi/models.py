@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.urls import reverse
 import datetime
 import json
@@ -111,7 +111,6 @@ class Solution(models.Model):
         return reverse('restapi:solutions-retrieve', kwargs={'problem_id': self.problem.id, 'pk': self.pk})
 
 
-# added for S14
 class PartialSolution(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now_add=True)
