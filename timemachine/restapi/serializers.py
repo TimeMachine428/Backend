@@ -66,4 +66,3 @@ class PartialSolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = PartialSolution
         fields = ('id', 'created', 'modified', 'code', 'language', 'output', 'jobs', 'author')
-

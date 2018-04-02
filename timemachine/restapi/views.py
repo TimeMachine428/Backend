@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions
 from restapi.models import Problem, Rating, User
 from restapi.serializers import ProblemSerializer, RatingSerializer, SolutionSerializer, TestCaseSerializer, \
-    UserSerializer
+    UserSerializer, PartialSolutionSerializer
 from restapi.permissions import IsOwnerOrReadOnly, IsOwnerOfProblemOrReadOnly
 from rest_framework.permissions import AllowAny
 from submissions.evaluate import evaluate
@@ -164,7 +164,7 @@ class SolutionAPIView(generics.ListCreateAPIView):
 
 # ------------------- added for S14 - save solution ----------------------------------------
 class PartialSolutionAPIView(generics.ListCreateAPIView):
-    serializer_class = SolutionSerializer
+    serializer_class = PartialSolutionSerializer
 
     def get_queryset(self):
         problem_id = self.kwargs.get('problem_id')
@@ -179,7 +179,7 @@ class PartialSolutionAPIView(generics.ListCreateAPIView):
 
 class PartialSolutionRUDView(generics.RetrieveAPIView):
     lookup_field = 'pk'
-    serializer_class = SolutionSerializer
+    serializer_class = PartialSolutionSerializer
 
     def get_queryset(self):
         problem_id = self.kwargs.get('problem_id')
